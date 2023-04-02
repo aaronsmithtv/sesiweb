@@ -4,16 +4,46 @@ from pydantic import AnyUrl, BaseModel
 
 
 class ProductModel(BaseModel):
+    """Base product build class for SideFX Web API.
+
+    Attributes:
+        product (str): The product to make requests for. Product accepts the
+            following values: `'houdini', 'houdini-py3', 'houdini-py37',
+            'houdini-py2', 'docker', 'sidefxlabs', 'houdini-launcher',
+            'houdini-launcher-py3', 'houdini-launcher-py37', 'launcher-iso',
+            'launcher-iso-py3', 'launcher-iso-py37', 'launcher-iso-py2'`
+        platform (str): The operating system to install Houdini on: `'win64', 'macos',
+            'macosx_arm64', 'linux'`. Does not effect Docker and SideFXLabs builds.
+    """
     product: str
     platform: str
 
 
 class ProductBuild(ProductModel):
+    """A full product with build and version num, based on ProductModel.
+
+    Attributes:
+        product (str): The product name, e.g. `'houdini'`.
+        platform (str): The platform name, e.g. `'linux'`.
+        version (Optional[str]): A product version, e.g. `'17.0'`.
+        build (Optional[str]): A product build, e.g. `'382'`.
+    """
     version: Optional[str]
     build: Optional[str]
 
 
 class DailyBuild(ProductBuild):
+    """A web API return model, with date, release, status metadata appended.
+
+    Attributes:
+        product (str): The product name, e.g. `'houdini'`.
+        platform (str): The platform name, e.g. `'linux'`.
+        version (Optional[str]): A product version, e.g. `'17.0'`.
+        build (Optional[str]): A product build, e.g. `'382'`.
+        date (str): The date the build was introduced, in `'YYYY/MM/DD'` format.
+        release (str): The type of release the build is tagged with, e.g.`'gold'`.
+        status (str): The condition of the build, e.g. `'good'`.
+    """
     date: str
     release: str
     status: str
@@ -33,12 +63,30 @@ class DailyBuild(ProductBuild):
 
 
 class InstallBuild(BaseModel):
+    """Download & installation metadata for a returned build.
+
+    Attributes:
+        download_url (AnyUrl): A cloudfront URL to download the build from.
+        filename (str): A filename for the downloadable binary.
+        hash (str): A hash for the downloadable binary.
+    """
     download_url: AnyUrl
     filename: str
     hash: str
 
 
 class BuildDownloadModel(InstallBuild):
+    """Full download metadata with build status, size and date introduced
+
+    Attributes:
+        download_url (AnyUrl): A cloudfront URL to download the build from.
+        filename (str): A filename for the downloadable binary.
+        hash (str): A hash for the downloadable binary.
+        date (str): The date the build was introduced, in `'YYYY/MM/DD'` format.
+        releases_list (str): The type of release the build is tagged with, e.g.`'gold'`.
+        status (str): The condition of the build, e.g. `'good'`.
+        size (int): The integer filesize of the download in bytes.
+    """
     date: str
     releases_list: str
     status: str

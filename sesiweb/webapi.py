@@ -117,7 +117,7 @@ class SesiWeb:
     def get_session_response(
             self, post_data: dict[str, Any],
             timeout: Optional[int] = None) -> Any:
-        """Get an appropriate response from constructed requests session
+        """Get an appropriate response from constructed requests session.
 
         Args:
             post_data (dict[str, Any]): SideFX Web API POST request data
