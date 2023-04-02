@@ -56,3 +56,15 @@ class BuildDownloadModel(InstallBuild):
                 "size": 1114902200,
             }
         }
+
+
+class HServerModel(BaseModel):
+    server_name: str
+    server_code: str
+    version: str
+    products: str
+
+
+class LicenseModel(BaseModel):
+    license_keys: list[str]
+    server_key: str

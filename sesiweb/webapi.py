@@ -11,7 +11,8 @@ from urllib3.util.retry import Retry
 from sesiweb.exceptions import APIError, AuthorizationError
 from sesiweb.model.file import ResponseFile
 from sesiweb.model.service import (BuildDownloadModel, DailyBuild,
-                                   ProductBuild, ProductModel)
+                                   ProductBuild, ProductModel,
+                                   HServerModel, LicenseModel)
 
 
 class SesiWeb:
@@ -93,6 +94,24 @@ class SesiWeb:
         post_data = dict(json=json.dumps([api_command, [], build_dict]))
         resp_build = self.get_session_response(post_data)
         build_dl = BuildDownloadModel.parse_obj(resp_build)
+        return build_dl
+
+    def get_nc_license(self, srvinfo: HServerModel):
+        """Generate a non-commercial license key
+
+        Args:
+            srvinfo (HServerModel): License server data to generate NC key to.
+
+        Returns:
+            LicenseModel: A full license key string accompanied with a matching
+                server key.
+        """
+        api_command = "license.get_non_commercial_license"
+
+        build_dict = dict(srvinfo)
+        post_data = dict(json=json.dumps([api_command, [], build_dict]))
+        resp_build = self.get_session_response(post_data)
+        build_dl = LicenseModel.parse_obj(resp_build)
         return build_dl
 
     def get_session_response(
