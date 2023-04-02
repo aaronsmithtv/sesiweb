@@ -1,0 +1,43 @@
+[project]
+name = "sesiweb_test"
+version = "0.0.2"
+description = "Unofficial driver for the SideFX Web API"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+keywords = ["sidefx", "houdini", "sesi"]
+
+authors = [
+    {name = "Aaron Smith", email = "aaron@aaronsmith.tv" }
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Libraries",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "requests",
+    "urllib3",
+    "pydantic"
+]
+
+[project.optional-dependencies]
+dev = ["check-manifest"]
+test = ["coverage"]
+
+[project.urls]
+"Homepage" = "https://github.com/aaronsmithtv/sesiweb"
+"Bug Reports" = "https://github.com/pypa/aaronsmithtv/issues"
+"Source" = "https://github.com/aaronsmithtv/sesiweb/"
+
+[tool.setuptools]
+package-data = {"sample" = ["*.dat"]}
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
