@@ -35,7 +35,7 @@ test = [
 
 [project.urls]
 "Homepage" = "https://github.com/aaronsmithtv/sesiweb"
-"Bug Reports" = "https://github.com/pypa/aaronsmithtv/issues"
+"Bug Reports" = "https://github.com/aaronsmithtv/issues"
 "Source" = "https://github.com/aaronsmithtv/sesiweb/"
 
 [tool.setuptools]
