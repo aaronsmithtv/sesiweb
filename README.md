@@ -1,17 +1,29 @@
-# sesiweb
+# <img src="https://static.sidefx.com/images/apple-touch-icon.png" width="25" height="25" alt="Hbuild Logo"> sesiweb
 
-sesiweb is a Python module used as a driver for the SideFX Web API. It provides a simple interface to interact with the API and obtain data about Houdini product builds.
+![Test](https://github.com/aaronsmithtv/sesiweb/actions/workflows/test.yml/badge.svg)
+
+sesiweb is a Python module used as a synchronous driver for the SideFX Web API. It provides a simple interface to interact with the API and obtain data about Houdini product builds.
 
 Inputs are validated with Pydantic, and methods in sesiweb provide additional lookup functionality, exceptions, and models.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Daily Build Listing](#daily-build-listing)
+- [Acquiring a Build Download](#acquiring-a-build-download)
+- [License](#license)
 
 ## Installation
 
 You can install sesiweb via pip:
 
 ```shell
-pip install sesiweb
+pip install --upgrade sesiweb
 ```
-## Usage
+
+*Note: sesiweb is intended for Python 3, as it supports several modern Python features.*
+
+## Daily Build Listing
 
 To use sesiweb, you need to provide your SideFX API credentials:
 
