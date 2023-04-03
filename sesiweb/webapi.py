@@ -53,8 +53,42 @@ class SesiWeb:
 
     def get_latest_builds(
             self, prodinfo: ProductModel | dict,
-            only_production: Optional[bool] = True) -> list[DailyBuild]:
+            only_production: Optional[bool] = True,
+            prodfilter: Optional[dict] = None) -> list[DailyBuild]:
         """List all latest SideFX product builds, with metadata
+
+        Args:
+            prodinfo (ProductModel | dict): The input product and platform data,
+                (e.g houdini & linux).
+            only_production (Optional[bool]): Whether builds are daily (False)
+                or production (True), default: True
+            prodfilter (Optional[dict]): An optional filter for the results of
+                latest builds. Accepted options are `'build', 'date',
+                'release', 'status', 'version'`.
+
+        Returns:
+            list[DailyBuild]: A list of builds, with returned metadata for each
+                build.
+        """
+        api_command = "download.get_daily_builds_list"
+
+        build_dict = dict(prodinfo)
+        build_dict.update({'only_production': only_production})
+
+        post_data = dict(json=json.dumps([api_command, [], build_dict]))
+        resp_builds = self.get_session_response(post_data)
+
+        if prodfilter:
+            resp_builds = filter_list_response(resp_builds, prodfilter)
+
+        builds = [DailyBuild.parse_obj(resp_build) for resp_build in resp_builds]
+
+        return builds
+
+    def get_latest_build(
+            self, prodinfo: ProductModel | dict,
+            only_production: Optional[bool] = True) -> DailyBuild:
+        """Single return method for get_latest_builds
 
         Args:
             prodinfo (ProductModel | dict): The input product and platform data,
@@ -65,17 +99,7 @@ class SesiWeb:
         Returns:
             list[DailyBuild]: A list of builds
         """
-        api_command = "download.get_daily_builds_list"
-
-        build_dict = dict(prodinfo)
-        build_dict.update({'only_production': only_production})
-
-        post_data = dict(json=json.dumps([api_command, [], build_dict]))
-        resp_builds = self.get_session_response(post_data)
-
-        builds = [DailyBuild.parse_obj(resp_build) for resp_build in resp_builds]
-
-        return builds
+        return self.get_latest_builds(prodinfo, only_production)[0]
 
     def get_build_download(
             self, prodinfo: ProductBuild | dict) -> BuildDownloadModel:
@@ -249,3 +273,21 @@ def without_keys(d: dict, keys: list[str]) -> dict:
         dict: Original dict with removed keys
     """
     return {k: d[k] for k in d.keys() - keys}
+
+
+def filter_list_response(results: list[dict], resfilter: dict) -> list[dict]:
+    """Returns a filtered dict array
+
+    Args:
+        results (list[dict]): A list of dict objects to filter
+        resfilter (dict): Key/value pairs to filter by
+
+    Returns:
+        list[dict]:
+    """
+    def filter_func(d):
+        return all(
+            d[k] == v if k in d else KeyError() for k, v in resfilter.items()
+        )
+
+    return list(filter(filter_func, results))
