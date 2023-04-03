@@ -1,5 +1,6 @@
 # <img src="https://static.sidefx.com/images/apple-touch-icon.png" width="25" height="25" alt="Hbuild Logo"> sesiweb
 
+[![](https://img.shields.io/pypi/v/sesiweb.svg?maxAge=3600)](https://pypi.org/project/sesiweb/)
 ![Test](https://github.com/aaronsmithtv/sesiweb/actions/workflows/test.yml/badge.svg)
 
 sesiweb is a Python module used as a synchronous driver for the SideFX Web API. It provides a simple interface to interact with the API and obtain data about Houdini product builds.
