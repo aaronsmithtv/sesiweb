@@ -69,13 +69,19 @@ For more information on the SideFX Web API and the returned results you can filt
 
 ## Acquiring a Build Download
 
-Using sesiweb, you can also transform a `DailyBuild` object into a `ProductBuild` object, which is a required input for acquiring a download URL.
+Using sesiweb and Pydantic, you can also transform a `DailyBuild` object into a `ProductBuild` object, which is a required input for acquiring a download URL.
 
-In the script below, 
+In the script below, the single latest daily development build (irrespective of version number) is acquired using `get_latest_build`. `get_build_download` is then used to return the download metadata for that build:
 
 ```python
-# Get the latest Houdini build (filtered)
-build = sw.get_latest_build(prodinfo=build, prodfilter=buildfilter)
+from sesiweb import SesiWeb
+from sesiweb.model.service import ProductBuild
+
+# Get the most recent Houdini product builds
+build = {"product": "houdini", "platform": "linux"}
+
+# Get the latest Houdini build
+build = sw.get_latest_build(prodinfo=build, only_production=False)
 
 # Get the download URL, filename and hash of the build
 build_dl = sw.get_build_download(
@@ -90,6 +96,8 @@ This will return a `BuildDownloadModel` object containing a download URL, build 
 ```shell
 download_url=AnyUrl('https://gjvnth38g.cloudfront.net/download/download-build/456223/cdn/?Expires=166636236...
 ```
+
+For an example of using this metadata in a purpose suitable for a production environment, see [autobuild.py](https://github.com/aaronsmithtv/Houdini-Docker/blob/main/hbuild/autobuild.py) in [Houdini-Docker](https://github.com/aaronsmithtv/Houdini-Docker); Where sesiweb build data is used to construct a Docker image using a custom Houdini installation process.
 
 ## License
 
