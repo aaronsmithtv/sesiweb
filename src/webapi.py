@@ -8,11 +8,11 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from sesiweb.exceptions import APIError, AuthorizationError
-from sesiweb.model.file import ResponseFile
-from sesiweb.model.service import (BuildDownloadModel, DailyBuild,
-                                   ProductBuild, ProductModel,
-                                   HServerModel, LicenseModel)
+from src.exceptions import APIError, AuthorizationError
+from src.model.file import ResponseFile
+from src.model.service import (BuildDownloadModel, DailyBuild,
+                               ProductBuild, ProductModel,
+                               HServerModel, LicenseModel)
 
 
 class SesiWeb:
@@ -63,7 +63,7 @@ class SesiWeb:
             only_production (Optional[bool]): Whether builds are daily (False)
                 or production (True), default: True
             prodfilter (Optional[dict]): An optional filter for the results of
-                latest builds. Accepted options are `'build', 'date',
+                latest builds. Accepted keys are `'build', 'date',
                 'release', 'status', 'version'`.
 
         Returns:
@@ -87,7 +87,8 @@ class SesiWeb:
 
     def get_latest_build(
             self, prodinfo: ProductModel | dict,
-            only_production: Optional[bool] = True) -> DailyBuild:
+            only_production: Optional[bool] = True,
+            prodfilter: Optional[dict] = None) -> DailyBuild:
         """Single return method for get_latest_builds
 
         Args:
@@ -95,11 +96,14 @@ class SesiWeb:
                 (e.g houdini & linux).
             only_production (Optional[bool]): Whether builds are daily (False)
                 or production (True), default: True
+            prodfilter (Optional[dict]): An optional filter for the results of
+                latest builds. Accepted keys are `'build', 'date',
+                'release', 'status', 'version'`.
 
         Returns:
             list[DailyBuild]: A list of builds
         """
-        return self.get_latest_builds(prodinfo, only_production)[0]
+        return self.get_latest_builds(prodinfo, only_production, prodfilter)[0]
 
     def get_build_download(
             self, prodinfo: ProductBuild | dict) -> BuildDownloadModel:
@@ -174,7 +178,7 @@ def get_session() -> requests.Session:
     retry_strategy = Retry(
         total=3,
         status_forcelist=[429, ],
-        method_whitelist=["GET", "POST"],
+        allowed_methods=["GET", "POST"],
         backoff_factor=1,
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)

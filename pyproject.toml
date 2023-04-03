@@ -28,7 +28,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["check-manifest"]
-test = ["coverage"]
+test = [
+    "pytest",
+    "coverage",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/aaronsmithtv/sesiweb"

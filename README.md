@@ -13,9 +13,8 @@ pip install sesiweb
 
 To use sesiweb, you need to provide your SideFX API credentials:
 
-
 ```python
-from sesiweb import SesiWeb
+from src import SesiWeb
 
 sesi_secret = "your_secret_key"
 sesi_id = "your_client_id"
