@@ -77,6 +77,11 @@ In the script below, the single latest daily development build (irrespective of 
 from sesiweb import SesiWeb
 from sesiweb.model.service import ProductBuild
 
+sesi_secret = "your_secret_key"
+sesi_id = "your_client_id"
+
+sw = SesiWeb(sesi_secret, sesi_id)
+
 # Get the most recent Houdini product builds
 build = {"product": "houdini", "platform": "linux"}
 
