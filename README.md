@@ -1,6 +1,6 @@
 # sesiweb
 
-sesiweb is a Python module used as a driver for the SideFX web API. It provides a simple interface to interact with the API and obtain data about Houdini product builds.
+sesiweb is a Python module used as a driver for the SideFX Web API. It provides a simple interface to interact with the API and obtain data about Houdini product builds.
 
 Inputs are validated with Pydantic, and methods in sesiweb provide additional lookup functionality, exceptions, and models.
 
@@ -52,7 +52,31 @@ latest_builds = sw.get_latest_builds(
 )
 ```
 
-For more information on the SideFX Web API, refer to the [SideFX Web API documentation](https://www.sidefx.com/docs/api/).
+For more information on the SideFX Web API and the returned results you can filter by, refer to the [SideFX Web API documentation](https://www.sidefx.com/docs/api/).
+
+## Acquiring a Build Download
+
+Using sesiweb, you can also transform a `DailyBuild` object into a `ProductBuild` object, which is a required input for acquiring a download URL.
+
+In the script below, 
+
+```python
+# Get the latest Houdini build (filtered)
+build = sw.get_latest_build(prodinfo=build, prodfilter=buildfilter)
+
+# Get the download URL, filename and hash of the build
+build_dl = sw.get_build_download(
+	prodinfo=ProductBuild(**build.dict())
+)
+
+print(build_dl)
+```
+
+This will return a `BuildDownloadModel` object containing a download URL, build filename, and hash:
+
+```shell
+download_url=AnyUrl('https://gjvnth38g.cloudfront.net/download/download-build/456223/cdn/?Expires=166636236...
+```
 
 ## License
 
