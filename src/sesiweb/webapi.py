@@ -8,10 +8,10 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from src.exceptions import APIError, AuthorizationError
-from src.model.file import ResponseFile
-from src.model.service import (BuildDownloadModel, DailyBuild, HServerModel,
-                               LicenseModel, ProductBuild, ProductModel)
+from .exceptions import APIError, AuthorizationError
+from .model.file import ResponseFile
+from .model.service import (BuildDownloadModel, DailyBuild, HServerModel,
+                            LicenseModel, ProductBuild, ProductModel)
 
 
 class SesiWeb:
@@ -177,7 +177,7 @@ def get_session() -> requests.Session:
     retry_strategy = Retry(
         total=3,
         status_forcelist=[429, ],
-        allowed_methods=["GET", "POST"],
+        method_whitelist=["GET", "POST"],
         backoff_factor=1,
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)

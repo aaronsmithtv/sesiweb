@@ -1,7 +1,7 @@
 import os
 
-from src import SesiWeb
-from src.model.service import ProductBuild, ProductModel
+from src.sesiweb import SesiWeb
+from src.sesiweb.model.service import ProductBuild, ProductModel
 
 client_id = os.environ.get("SIDEFX_CLIENT")
 client_secret = os.environ.get("SIDEFX_SECRET")
