@@ -15,6 +15,7 @@ class ProductModel(BaseModel):
         platform (str): The operating system to install Houdini on: `'win64', 'macos',
             'macosx_arm64', 'linux'`. Does not effect Docker and SideFXLabs builds.
     """
+
     product: str
     platform: str
 
@@ -28,6 +29,7 @@ class ProductBuild(ProductModel):
         version (Optional[str]): A product version, e.g. `'17.0'`.
         build (Optional[str]): A product build, e.g. `'382'`.
     """
+
     version: Optional[str]
     build: Optional[str]
 
@@ -44,6 +46,7 @@ class DailyBuild(ProductBuild):
         release (str): The type of release the build is tagged with, e.g.`'gold'`.
         status (str): The condition of the build, e.g. `'good'`.
     """
+
     date: str
     release: str
     status: str
@@ -70,6 +73,7 @@ class InstallBuild(BaseModel):
         filename (str): A filename for the downloadable binary.
         hash (str): A hash for the downloadable binary.
     """
+
     download_url: AnyUrl
     filename: str
     hash: str
@@ -87,6 +91,7 @@ class BuildDownloadModel(InstallBuild):
         status (str): The condition of the build, e.g. `'good'`.
         size (int): The integer filesize of the download in bytes.
     """
+
     date: str
     releases_list: str
     status: str
