@@ -34,7 +34,8 @@ class SesiWeb:
         expiry_time (str): The expiration time of the access token.
 
     """
-    def __init__(self, client_id: str, client_secret: str):
+
+    def __init__(self, client_id: str, client_secret: str) -> None:
         """Construct http session and access token
 
         Args:
@@ -47,20 +48,22 @@ class SesiWeb:
         self.access_token, self.expiry_time = get_access_token(
             access_token_url=self.access_token_url,
             client_secret_key=client_secret,
-            client_id=client_id
+            client_id=client_id,
         )
 
     def get_latest_builds(
-            self, prodinfo: ProductModel | dict,
-            only_production: Optional[bool] = True,
-            prodfilter: Optional[dict] = None) -> list[DailyBuild]:
+        self,
+        prodinfo: ProductModel | dict,
+        only_production: bool = True,
+        prodfilter: Optional[dict] = None,
+    ) -> list[DailyBuild]:
         """List all latest SideFX product builds, with metadata
 
         Args:
             prodinfo (ProductModel | dict): The input product and platform data,
                 (e.g houdini & linux).
-            only_production (Optional[bool]): Whether builds are daily (False)
-                or production (True), default: True
+            only_production (bool): Whether builds are daily (False) or production
+                (True), default: True
             prodfilter (Optional[dict]): An optional filter for the results of
                 latest builds. Accepted keys are `'build', 'date',
                 'release', 'status', 'version'`.
@@ -72,12 +75,12 @@ class SesiWeb:
         api_command = "download.get_daily_builds_list"
 
         build_dict = dict(prodinfo)
-        build_dict.update({'only_production': only_production})
+        build_dict.update({"only_production": only_production})
 
-        post_data = dict(json=json.dumps([api_command, [], build_dict]))
+        post_data = {"json": json.dumps([api_command, [], build_dict])}
         resp_builds = self.get_session_response(post_data)
 
-        if prodfilter:
+        if prodfilter is not None:
             resp_builds = filter_list_response(resp_builds, prodfilter)
 
         builds = [DailyBuild.parse_obj(resp_build) for resp_build in resp_builds]
@@ -85,9 +88,11 @@ class SesiWeb:
         return builds
 
     def get_latest_build(
-            self, prodinfo: ProductModel | dict,
-            only_production: Optional[bool] = True,
-            prodfilter: Optional[dict] = None) -> DailyBuild:
+        self,
+        prodinfo: ProductModel | dict,
+        only_production: bool = True,
+        prodfilter: Optional[dict] = None,
+    ) -> DailyBuild:
         """Single return method for get_latest_builds
 
         Args:
@@ -104,8 +109,7 @@ class SesiWeb:
         """
         return self.get_latest_builds(prodinfo, only_production, prodfilter)[0]
 
-    def get_build_download(
-            self, prodinfo: ProductBuild | dict) -> BuildDownloadModel:
+    def get_build_download(self, prodinfo: ProductBuild | dict) -> BuildDownloadModel:
         """Using ProductBuild object data, get download info for the build
 
         Args:
@@ -118,7 +122,7 @@ class SesiWeb:
         api_command = "download.get_daily_build_download"
 
         build_dict = dict(prodinfo)
-        post_data = dict(json=json.dumps([api_command, [], build_dict]))
+        post_data = {"json": json.dumps([api_command, [], build_dict])}
         resp_build = self.get_session_response(post_data)
         build_dl = BuildDownloadModel.parse_obj(resp_build)
         return build_dl
@@ -142,8 +146,8 @@ class SesiWeb:
         return build_dl
 
     def get_session_response(
-            self, post_data: dict[str, Any],
-            timeout: Optional[int] = None) -> Any:
+        self, post_data: dict[str, Any], timeout: Optional[int] = None
+    ) -> Any:
         """Get an appropriate response from constructed requests session.
 
         Args:
@@ -155,17 +159,16 @@ class SesiWeb:
         """
         response = self.session.post(
             self.endpoint_url,
-            headers={"Authorization": "Bearer " + self.access_token},
+            headers={"Authorization": f"Bearer {self.access_token}"},
             data=post_data,
-            timeout=timeout)
+            timeout=timeout,
+        )
         if response.status_code == 200:
             if response.headers.get("Content-Type") == "application/octet-stream":
                 return ResponseFile(response)
             return response.json()
 
-        raise APIError(
-            response.status_code,
-            extract_traceback(response))
+        raise APIError(response.status_code, extract_traceback(response))
 
 
 def get_session() -> requests.Session:
@@ -176,7 +179,7 @@ def get_session() -> requests.Session:
     """
     retry_strategy = Retry(
         total=3,
-        status_forcelist=[429, ],
+        status_forcelist=[429],
         method_whitelist=["GET", "POST"],
         backoff_factor=1,
     )
@@ -188,10 +191,11 @@ def get_session() -> requests.Session:
 
 
 def get_access_token(
-        client_id: str,
-        client_secret_key: str,
-        access_token_url: str,
-        timeout: Optional[int] = None) -> (AnyStr, AnyStr):
+    client_id: str,
+    client_secret_key: str,
+    access_token_url: str,
+    timeout: Optional[int] = None,
+) -> (AnyStr, AnyStr):
     """Construct the access token for API requests
 
     Given an API client (id and secret key) that is allowed to make API
@@ -223,7 +227,8 @@ def get_access_token(
             "Authorization": f"Basic {base64.b64encode(auth_header).decode('utf-8')}",
         },
         data=post_data,
-        timeout=timeout)
+        timeout=timeout,
+    )
 
     if response.status_code != 200:
         status_msg = f"{response.status_code}: {extract_traceback(response)}"
@@ -265,17 +270,17 @@ def extract_traceback(response: requests.Response) -> AnyStr:
     return html.unescape(traceback)
 
 
-def without_keys(d: dict, keys: list[str]) -> dict:
+def without_keys(dictionary: dict, keys_to_remove: list[str]) -> dict:
     """Return a dict without keys specified in list
 
     Args:
-        d (dict): Dict to remove keys from
-        keys (list[str]): Keys to remove
+        dictionary (dict): Dict to remove keys from
+        keys_to_remove (list[str]): Keys to remove
 
     Returns:
         dict: Original dict with removed keys
     """
-    return {k: d[k] for k in d.keys() - keys}
+    return {key: dictionary[key] for key in dictionary.keys() - keys_to_remove}
 
 
 def filter_list_response(results: list[dict], resfilter: dict) -> list[dict]:
@@ -288,9 +293,8 @@ def filter_list_response(results: list[dict], resfilter: dict) -> list[dict]:
     Returns:
         list[dict]:
     """
+
     def filter_func(d):
-        return all(
-            d[k] == v if k in d else KeyError() for k, v in resfilter.items()
-        )
+        return all(d[k] == v if k in d else KeyError() for k, v in resfilter.items())
 
     return list(filter(filter_func, results))
