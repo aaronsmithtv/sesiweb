@@ -8,6 +8,7 @@ class ResponseFile:
     Call the API function from a `with` statement, and call the read method
     on the object to read the data in chunks.
     """
+
     def __init__(self, response: Response):
         self.response = response
 

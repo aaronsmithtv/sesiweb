@@ -10,8 +10,14 @@ from urllib3.util.retry import Retry
 
 from .exceptions import APIError, AuthorizationError
 from .model.file import ResponseFile
-from .model.service import (BuildDownloadModel, DailyBuild, HServerModel,
-                            LicenseModel, ProductBuild, ProductModel)
+from .model.service import (
+    BuildDownloadModel,
+    DailyBuild,
+    HServerModel,
+    LicenseModel,
+    ProductBuild,
+    ProductModel,
+)
 
 
 class SesiWeb:

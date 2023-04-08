@@ -17,9 +17,7 @@ def test_get_latest_builds():
     prodinfo = ProductModel(product="houdini", platform="linux")
     prodfilter = {"status": "good", "release": "gold"}
     latest_builds = sesiweb.get_latest_builds(
-        prodinfo=prodinfo,
-        only_production=False,
-        prodfilter=prodfilter
+        prodinfo=prodinfo, only_production=False, prodfilter=prodfilter
     )
     assert latest_builds is not None
     assert len(latest_builds) > 0
@@ -30,9 +28,7 @@ def test_get_latest_build():
     prodinfo = ProductModel(product="houdini", platform="linux")
     prodfilter = {"status": "good", "release": "gold"}
     latest_builds = sesiweb.get_latest_build(
-        prodinfo=prodinfo,
-        only_production=False,
-        prodfilter=prodfilter
+        prodinfo=prodinfo, only_production=False, prodfilter=prodfilter
     )
     assert latest_builds is not None
 
@@ -42,13 +38,9 @@ def test_get_dl():
     prodinfo = ProductModel(product="houdini", platform="linux")
     prodfilter = {"status": "good", "release": "gold"}
     latest_build = sesiweb.get_latest_build(
-        prodinfo=prodinfo,
-        only_production=False,
-        prodfilter=prodfilter
+        prodinfo=prodinfo, only_production=False, prodfilter=prodfilter
     )
 
-    build_dl = sesiweb.get_build_download(
-        prodinfo=ProductBuild(**latest_build.dict())
-    )
+    build_dl = sesiweb.get_build_download(prodinfo=ProductBuild(**latest_build.dict()))
 
     assert build_dl is not None
