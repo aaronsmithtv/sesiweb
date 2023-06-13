@@ -1,6 +1,6 @@
 [project]
 name = "sesiweb"
-version = "0.1.0"
+version = "0.1.1"
 description = "Unofficial driver for the SideFX Web API"
 readme = "README.md"
 requires-python = ">=3.7"
