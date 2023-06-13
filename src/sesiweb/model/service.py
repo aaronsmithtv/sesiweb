@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import AnyUrl, BaseModel
 
@@ -119,5 +119,5 @@ class HServerModel(BaseModel):
 
 
 class LicenseModel(BaseModel):
-    license_keys: list[str]
+    license_keys: List[str]
     server_key: str

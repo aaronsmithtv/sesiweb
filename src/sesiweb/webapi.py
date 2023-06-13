@@ -2,7 +2,7 @@ import base64
 import html
 import json
 import time
-from typing import Any, AnyStr, Optional
+from typing import Any, AnyStr, Optional, Union, List, Dict
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -59,10 +59,10 @@ class SesiWeb:
 
     def get_latest_builds(
         self,
-        prodinfo: ProductModel | dict,
+        prodinfo: Union[ProductModel, dict],
         only_production: bool = True,
         prodfilter: Optional[dict] = None,
-    ) -> list[DailyBuild]:
+    ) -> List[DailyBuild]:
         """List all latest SideFX product builds, with metadata
 
         Args:
@@ -95,7 +95,7 @@ class SesiWeb:
 
     def get_latest_build(
         self,
-        prodinfo: ProductModel | dict,
+        prodinfo: Union[ProductModel, dict],
         only_production: bool = True,
         prodfilter: Optional[dict] = None,
     ) -> DailyBuild:
@@ -115,7 +115,7 @@ class SesiWeb:
         """
         return self.get_latest_builds(prodinfo, only_production, prodfilter)[0]
 
-    def get_build_download(self, prodinfo: ProductBuild | dict) -> BuildDownloadModel:
+    def get_build_download(self, prodinfo: Union[ProductBuild, dict]) -> BuildDownloadModel:
         """Using ProductBuild object data, get download info for the build
 
         Args:
@@ -152,7 +152,7 @@ class SesiWeb:
         return build_dl
 
     def get_session_response(
-        self, post_data: dict[str, Any], timeout: Optional[int] = None
+        self, post_data: Dict[str, Any], timeout: Optional[int] = None
     ) -> Any:
         """Get an appropriate response from constructed requests session.
 
@@ -276,7 +276,7 @@ def extract_traceback(response: requests.Response) -> AnyStr:
     return html.unescape(traceback)
 
 
-def without_keys(dictionary: dict, keys_to_remove: list[str]) -> dict:
+def without_keys(dictionary: dict, keys_to_remove: List[str]) -> dict:
     """Return a dict without keys specified in list
 
     Args:
@@ -289,7 +289,7 @@ def without_keys(dictionary: dict, keys_to_remove: list[str]) -> dict:
     return {key: dictionary[key] for key in dictionary.keys() - keys_to_remove}
 
 
-def filter_list_response(results: list[dict], resfilter: dict) -> list[dict]:
+def filter_list_response(results: List[dict], resfilter: dict) -> List[dict]:
     """Returns a filtered dict array
 
     Args:
