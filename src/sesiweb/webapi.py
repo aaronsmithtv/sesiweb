@@ -2,7 +2,7 @@ import base64
 import html
 import json
 import time
-from typing import Any, AnyStr, Optional, Union, List, Dict
+from typing import Any, AnyStr, Dict, List, Optional, Union
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -115,7 +115,9 @@ class SesiWeb:
         """
         return self.get_latest_builds(prodinfo, only_production, prodfilter)[0]
 
-    def get_build_download(self, prodinfo: Union[ProductBuild, dict]) -> BuildDownloadModel:
+    def get_build_download(
+        self, prodinfo: Union[ProductBuild, dict]
+    ) -> BuildDownloadModel:
         """Using ProductBuild object data, get download info for the build
 
         Args:
